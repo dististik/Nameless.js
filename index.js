@@ -153,7 +153,7 @@ client.on('message', message => {
 		}
 		embed.setDescription(desc);
 
-		if(channel == $user){
+		if($channel == $user){
 			var issuer = message.member.displayName;
 			embed.setFooter('Warned by ' + issuer);
 			var warned = $user.displayName;
