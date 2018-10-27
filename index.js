@@ -54,6 +54,32 @@ client.on('message', message => {
 			message.channel.send("I couldn't reach the external emoji server!");
 		}
 	}
+	if(message.content.startsWith('?randreact')){
+		var messageID = message.content.toString().substr(11); var randEmoji;
+
+		if(client.guilds.get('502711142083198977').available){
+			var $guild = client.guilds.get('502711142083198977');
+			var $emoji = $guild.emojis;
+
+			let emojiKeys = Array.from($emoji.keys());
+			var randno = Math.floor(Math.random() * emojiKeys.length);
+
+			randEmoji = $emoji.get(emojiKeys[randno]);
+		}
+		else{
+			message.channel.send("I couldn't reach the external emoji server!");
+		}
+
+		message.channel.fetchMessage(messageID)
+			.then($message => {
+				$message.react(randEmoji);
+				message.channel.send("I reacted to the requested message!");
+			})
+			.catch(() => {
+				message.channel.send("I couldn't find a message with that ID in this channel.");
+				console.error;
+			});
+	}
 
 	//HELP COMMAND - Index of call commands for users, add to this AFTER adding functionality
 	if(message.content.startsWith('!help')){
