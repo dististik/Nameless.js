@@ -57,8 +57,8 @@ client.on('message', message => {
 	if(message.content.startsWith('?randreact')){
 		var messageID = message.content.toString().substr(11); var randEmoji;
 
-		if(client.guilds.get('502711142083198977').available){
-			var $guild = client.guilds.get('502711142083198977');
+		if(client.guilds.get('emoji server id').available){
+			var $guild = client.guilds.get('emoji server id');
 			var $emoji = $guild.emojis;
 
 			let emojiKeys = Array.from($emoji.keys());
