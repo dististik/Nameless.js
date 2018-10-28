@@ -16,7 +16,7 @@ console.log = function(){
 }
 
 client.on('ready', () => {
-  console.log('Nameless.js build pre-6 ready!');
+  console.log('Nameless.js build 6 ready!');
 });
 
 //reusable functions
@@ -34,52 +34,16 @@ function getCurrentTime(){
 
 	return xv;
 }
+function generateCode(){
+	var alphaArray = ['A','B','C','D','E','F','G','H','J','K','M','P','Q','R','T','U','W','X','Y']; var genCode;
+	var randno = Math.floor(Math.random() * alphaArray.length);
+
+	genCode = alphaArray[randno]; genCode += Math.floor(Math.random() * 899) + 100;
+	return genCode;
+}
 
 //ALL COMMANDS, will be exported eventually maybe
 client.on('message', message => {
-
-	//Test commands (temp)
-	if(message.content === '?randextern'){ //Random emoji from bot dump
-		if(client.guilds.get('emoji server id').available){
-			var $guild = client.guilds.get('emoji server id');
-			var $emoji = $guild.emojis;
-
-			let emojiKeys = Array.from($emoji.keys());
-			var randno = Math.floor(Math.random() * emojiKeys.length);
-
-			var randEmoji = $emoji.get(emojiKeys[randno]).toString();
-			message.channel.send(randEmoji);
-		}
-		else{
-			message.channel.send("I couldn't reach the external emoji server!");
-		}
-	}
-	if(message.content.startsWith('?randreact')){
-		var messageID = message.content.toString().substr(11); var randEmoji;
-
-		if(client.guilds.get('emoji server id').available){
-			var $guild = client.guilds.get('emoji server id');
-			var $emoji = $guild.emojis;
-
-			let emojiKeys = Array.from($emoji.keys());
-			var randno = Math.floor(Math.random() * emojiKeys.length);
-
-			randEmoji = $emoji.get(emojiKeys[randno]);
-		}
-		else{
-			message.channel.send("I couldn't reach the external emoji server!");
-		}
-
-		message.channel.fetchMessage(messageID)
-			.then($message => {
-				$message.react(randEmoji);
-				message.channel.send("I reacted to the requested message!");
-			})
-			.catch(() => {
-				message.channel.send("I couldn't find a message with that ID in this channel.");
-				console.error;
-			});
-	}
 
 	//HELP COMMAND - Index of call commands for users, add to this AFTER adding functionality
 	if(message.content.startsWith('!help')){
@@ -191,6 +155,155 @@ client.on('message', message => {
 		}
 		warn = false;
 		$channel.send(embed);
+	}
+	if(message.content.startsWith('!tour')){ //Simple tournament handling
+		function checkRole(id){
+			return message.member.roles.has(id);
+		}
+
+		if(checkRole('coordinator id') || checkRole('meta director id') || checkRole('guest organizer id')){
+			var commandTxt = message.toString(); var $arguments = commandTxt.split(" ");
+			if(commandTxt.includes('start')){
+				var tourCode = generateCode();
+				while(fs.existsSync(`tournaments/${tourCode}.txt`)){
+					tourCode = generateCode(); //generate new code if the current one already exists
+				}
+
+				var randEmoji;
+				if(client.guilds.get('emoji server id').available){
+					var $guild = client.guilds.get('emoji server id');
+					var $emoji = $guild.emojis;
+
+					let emojiKeys = Array.from($emoji.keys());
+					var randno = Math.floor(Math.random() * emojiKeys.length);
+
+					randEmoji = $emoji.get(emojiKeys[randno]);
+				}
+
+				if(randEmoji && ($arguments[2])){
+					message.channel.fetchMessage($arguments[2])
+						.then($message => {
+							$message.react(randEmoji);
+							var fileContent = `open,${$arguments[2]},${randEmoji.name}:${randEmoji.id}`;
+							var filePath = `tournaments/${tourCode}.txt`;
+
+							fs.writeFile(filePath,fileContent,(err) =>{
+								if(err) throw err;
+								console.log(`Tournament file for '${tourCode}' created`);
+								message.channel.send(`Started tournament **${tourCode}** (${randEmoji.toString()})`);
+							});
+						})
+						.catch(() => {
+							message.channel.send("I couldn't find a message with that ID in this channel.");
+							console.error;
+						});
+				}
+			}
+			else if(commandTxt.includes('registered') && ($arguments[2])){
+				if(fs.existsSync(`tournaments/${$arguments[2]}.txt`)){
+					tournament = fs.readFileSync(`tournaments/${$arguments[2]}.txt`).toString().split(',');
+					if(tournament[0] == 'closed'){
+						var roster = new Attachment(`tournaments/closed/${$arguments[2]}.txt`);
+						message.channel.send(`This is the current roster for tournament **${$arguments[2]}**`,roster);
+					}
+					else{
+						message.channel.fetchMessage(tournament[1])
+							.then($message => {
+								var roster = $message.reactions.get(tournament[2]); var fileContent;
+								var filePath = `tournaments/closed/${$arguments[2]}.txt`;
+
+								function createTempRoster(val,key,map){
+									fileContent += `${val.username}#${val.discriminator}\r\n`;
+								}
+								
+								roster.fetchUsers(100).then($map => {
+									$map.forEach(createTempRoster);
+									fileContent = fileContent.substr(9);
+									fileContent = fileContent.trim();
+									fs.writeFile(filePath,fileContent,(err) => {
+										if(err) throw err;
+										console.log(`Roster for tournament '${$arguments[2]}' updated`);
+									});
+									var $roster = new Attachment(`tournaments/closed/${$arguments[2]}.txt`);
+									message.channel.send(`This is the current roster for tournament **${$arguments[2]}**`,$roster);
+								});
+								return true;
+							})
+							.catch((err) => {
+								var $error = err.toString().split('\n');
+								message.channel.send("Something went wrong. Please make sure you're following the requirements for this command.");
+								console.log($error[0]);
+							});
+					}
+				}
+				else{
+					channel.message.send("The requested tournament does not exist.");
+				}
+			}
+			else if(commandTxt.includes('close')){
+				if(fs.existsSync(`tournaments/${$arguments[2]}.txt`)){
+					tournament = fs.readFileSync(`tournaments/${$arguments[2]}.txt`).toString().split(',');
+					tournament[0] = 'closed'; tournamentJoin = tournament.join(',');
+
+					message.channel.fetchMessage(tournament[1])
+						.then($message => {
+							var roster = $message.reactions.get(tournament[2]); var fileContent;
+							var filePath = `tournaments/closed/${$arguments[2]}.txt`;
+
+							function createTempRoster(val,key,map){
+								fileContent += `${val.username}#${val.discriminator}\r\n`;
+							}
+							roster.remove('nameless id');
+							roster.fetchUsers(100).then($map => {
+								$map.forEach(createTempRoster);
+								fileContent = fileContent.substr(9);
+								fileContent = fileContent.trim();
+								fs.writeFile(filePath,fileContent,(err) => {
+									if(err) throw err;
+									console.log(`Roster for tournament '${$arguments[2]}' updated`);
+								});
+								var $roster = new Attachment(`tournaments/closed/${$arguments[2]}.txt`);
+							});
+						})
+						.catch((err) => {
+							var $error = err.toString().split('\n');
+							message.channel.send("Something went wrong. Please make sure you're following the requirements for this command.");
+							console.log($error[0]);
+						});
+
+					var filePath = `tournaments/${$arguments[2]}.txt`;
+					fs.writeFile(filePath,tournamentJoin,(err) => {
+						if(err) throw err;
+						console.log(`Tournament '${$arguments[2]}' closed`);
+						message.channel.send(`Closed tournament **${$arguments[2]}**`);
+					});
+				}
+				else{
+					channel.message.send("The requested tournament does not exist.");
+				}
+			}
+			else if(commandTxt.includes('kill')){
+				if(fs.existsSync(`tournaments/${$arguments[2]}.txt`) && fs.existsSync(`tournaments/closed/${$arguments[2]}.txt`)){
+					if(checkRole('coordinator id')){
+						var tourPath = `tournaments/${$arguments[2]}.txt`;
+						var rosterPath = `tournaments/closed/${$arguments[2]}.txt`;
+						fs.unlinkSync(tourPath); fs.unlinkSync(rosterPath);
+
+						console.log(`Tournament '${$arguments[2]}' has been killed by ${message.member.displayName}`);
+						message.channel.send(`The requested tournament has been removed from my memory (${$arguments[2]})`);
+					}
+					else{
+						message.channel.send("Only coordinators can kill tournaments.");
+					}
+			}
+				else{
+					message.channel.send("Either the requested tournament does not exist or has not been closed.");
+				}
+			}
+			else{
+				message.channel.send("You're not allowed to use this command, silly.");
+			}
+		}
 	}
 
 	//MOD COMMANDS

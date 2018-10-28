@@ -6,8 +6,9 @@
 **rule** – Sends one of the four main rules for this server
 **weak** – Sends all the type advantages for a type or type combination
 
-**__Moderator only commands__**
+**__Staff only commands__**
 **delete** – Deletes a specified number of messages
+**tour** – Ties a tournament to a specific message
 **verify** – Changes the verification level of the server
 
 Remember to start messages with `!` if you're trying to use a command!
