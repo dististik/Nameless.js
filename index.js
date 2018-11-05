@@ -300,6 +300,17 @@ client.on('message', message => {
 					message.channel.send("Either the requested tournament does not exist or has not been closed.");
 				}
 			}
+			else if(commandTxt.includes('find')){
+				if(fs.existsSync(`tournaments/${$arguments[2]}.txt`)){
+					tournament = fs.readFileSync(`tournaments/${$arguments[2]}.txt`).toString().split(',');
+					var returnMsg = `Here is a link to the sign-up message for tournament **${$arguments[2]}**:` + "\n" 
+					+ `https://canary.discordapp.com/channels/207392567925538817/207393832222982155/${tournament[1]}`;
+					//link is in the order of: channels/server id/channel id/message id
+					//canary link is likely unnecessary
+
+					message.channel.send(returnMsg);
+				}
+			}
 			else{
 				message.channel.send("You're not allowed to use this command, silly.");
 			}
