@@ -104,6 +104,7 @@ client.on('message', message => {
 
 	//ARGUMENTS REQUIRED
 	if(message.content.startsWith('!rule')){ //Reminds rules and allows moderators to warn others of the rules
+		if (!message.guild) return;
 		function checkRole(id){
 			return message.member.roles.has(id);
 		}
