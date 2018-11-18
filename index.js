@@ -219,6 +219,7 @@ client.on('message', message => {
 								
 								roster.fetchUsers(100).then($map => {
 									$map.forEach(createTempRoster);
+									fileContent = fileContent.replace('Nameless#1985\r\n','');
 									fileContent = fileContent.substr(9);
 									fileContent = fileContent.trim();
 									fs.writeFile(filePath,fileContent,(err) => {
@@ -257,6 +258,7 @@ client.on('message', message => {
 							roster.remove('nameless id');
 							roster.fetchUsers(100).then($map => {
 								$map.forEach(createTempRoster);
+								fileContent = fileContent.replace('Nameless#1985\r\n','');
 								fileContent = fileContent.substr(9);
 								fileContent = fileContent.trim();
 								fs.writeFile(filePath,fileContent,(err) => {
