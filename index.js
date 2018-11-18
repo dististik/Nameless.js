@@ -158,6 +158,7 @@ client.on('message', message => {
 		$channel.send(embed);
 	}
 	if(message.content.startsWith('!tour')){ //Simple tournament handling
+		if(!message.guild) { message.channel.send('I can only do this in a guild!'); return; }
 		function checkRole(id){
 			return message.member.roles.has(id);
 		}
