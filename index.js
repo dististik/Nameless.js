@@ -208,7 +208,7 @@ client.on('message', message => {
 						message.channel.send(`This is the current roster for tournament **${$arguments[2]}**`,roster);
 					}
 					else{
-						message.channel.fetchMessage(tournament[1])
+						client.guilds.get('nisemon league id').channels.get('tournament channel id').fetchMessage(tournament[1])
 							.then($message => {
 								var roster = $message.reactions.get(tournament[2]); var fileContent;
 								var filePath = `tournaments/closed/${$arguments[2]}.txt`;
