@@ -305,14 +305,45 @@ client.on('message', message => {
 				}
 			}
 			else if(commandTxt.includes('find')){
-				if(fs.existsSync(`tournaments/${$arguments[2]}.txt`)){
-					tournament = fs.readFileSync(`tournaments/${$arguments[2]}.txt`).toString().split(',');
-					var returnMsg = `Here is a link to the sign-up message for tournament **${$arguments[2]}**:` + "\n" 
-					+ `https://canary.discordapp.com/channels/207392567925538817/207393832222982155/${tournament[1]}`;
-					//link is in the order of: channels/server id/channel id/message id
-					//canary link is likely unnecessary
+				function tourFindLoop(callback){
+					var returnString = ""; var directoryContents; var directoryLength;
+					fs.readdir('./tournaments/',(err,files) => {
+						if(err) throw err;
+						directoryLength = files.length;
+						for(i = 0; i < directoryLength; i++){
+							directoryContents += files[i];
+							if(i != directoryLength - 1) directoryContents += ",";
+						}
+						directoryContents = directoryContents.replace(/\.txt/gi,'');
+						directoryContents = directoryContents.substr(16);
+						directoryContents = directoryContents.split(',');
 
-					message.channel.send(returnMsg);
+						var tourLinks = []; var tourCount = directoryContents.length;
+						for(i = 0; i < tourCount; i++){
+							var currentTour = fs.readFileSync(`./tournaments/${directoryContents[i]}.txt`).toString().split(',');
+							tourLinks.push(`https://canary.discordapp.com/channels/<nisemon league id>/<tournament channel id>/${currentTour[1]}`);
+						}
+
+						for(i = 0; i < tourCount; i++){
+							returnString += `[${directoryContents[i]}](${tourLinks[i]}): `;
+							tournament = fs.readFileSync(`tournaments/${directoryContents[i]}.txt`).toString().split(',');
+							returnString += tournament[0];
+							returnString += "\n";
+						}
+						returnString = returnString.trim();
+						if(callback) callback(returnString);
+					});
+				}
+
+				if(!$arguments[2]){
+					tourFindLoop($string => { 
+						var embed = new RichEmbed()
+							.setTitle('Complete Tournament Listing')
+							.setDescription($string)
+							.setColor(0xEF2626)
+							.setFooter('#tournaments');
+						message.channel.send(embed);
+					});
 				}
 			}
 			else{
