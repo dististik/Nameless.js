@@ -16,7 +16,7 @@ console.log = function(){
 }
 
 client.on('ready', () => {
-  console.log('Nameless.js build 6 ready!');
+  console.log('Nameless.js public build ready!');
 });
 
 //reusable functions
