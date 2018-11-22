@@ -306,7 +306,7 @@ client.on('message', message => {
 			}
 			else if(commandTxt.includes('find')){
 				function tourFindLoop(callback){
-					var returnString = ""; var directoryContents; var directoryLength;
+					var returnString = ""; var directoryContents = ""; var directoryLength;
 					fs.readdir('./tournaments/',(err,files) => {
 						if(err) throw err;
 						directoryLength = files.length;
@@ -315,16 +315,17 @@ client.on('message', message => {
 							if(i != directoryLength - 1) directoryContents += ",";
 						}
 						directoryContents = directoryContents.replace(/\.txt/gi,'');
-						directoryContents = directoryContents.substr(16);
 						directoryContents = directoryContents.split(',');
 
 						var tourLinks = []; var tourCount = directoryContents.length;
 						for(i = 0; i < tourCount; i++){
+							if(directoryContents[i] == "closed") { directoryContents.splice(i,1); continue; }
 							var currentTour = fs.readFileSync(`./tournaments/${directoryContents[i]}.txt`).toString().split(',');
-							tourLinks.push(`https://canary.discordapp.com/channels/<nisemon league id>/<tournament channel id>/${currentTour[1]}`);
+							tourLinks.push(`https://canary.discordapp.com/channels/<guild id>/<channel id>/${currentTour[1]}`);
 						}
 
 						for(i = 0; i < tourCount; i++){
+							if(directoryContents[i] == undefined) continue;
 							returnString += `[${directoryContents[i]}](${tourLinks[i]}): `;
 							tournament = fs.readFileSync(`tournaments/${directoryContents[i]}.txt`).toString().split(',');
 							returnString += tournament[0];
