@@ -25,7 +25,7 @@ This is the list of tools necessary for contributing to Nameless.
 
 * [Node.js](https://nodejs.org/en/) - Node.js is a runtime environment that allows you to run JavaScript outside of a browser while packaging in a few other neat tools we can use to fully utilize the environment.
 * [Discord.js](https://discord.js.org/#/) - Discord.js is a Discord API library that utilizes Node in order to make use of every single part of the Discord API. If a user can do it, Nameless can too with help from this library.
-* [Notepad++](https://notepad-plus-plus.org/) - Alternatively, literally any other source code editor. Other good ones include [Sublime Text](https://www.sublimetext.com/), [Atom](https://atom.io/), [Visual Studio Code](https://code.visualstudio.com/), and [Brackets](http://brackets.io/). 
+* [Sublime Text](https://www.sublimetext.com/) - Alternatively, literally any other source code editor. Other good ones include [Komodo Edit](https://www.activestate.com/products/komodo-edit/), [Atom](https://atom.io/), [Visual Studio Code](https://code.visualstudio.com/), and [Brackets](http://brackets.io/). 
 
 While it is possible to run Discord.js on Node.js versions as old as 6.0.0, we ask that you please be fully up-to-date for contributing to this project.
 
