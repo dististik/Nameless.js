@@ -305,8 +305,10 @@ client.on('message', message => {
 				}
 			}
 			else if(commandTxt.includes('find')){
+				let filtered = false;
+
 				function tourFindLoop(callback){
-					var returnString = ""; var directoryContents = ""; var directoryLength;
+					var returnString = ""; var directoryContents = ""; var directoryLength; let $$_ = false;
 					fs.readdir('./tournaments/',(err,files) => {
 						if(err) throw err;
 						directoryLength = files.length;
@@ -317,35 +319,39 @@ client.on('message', message => {
 						directoryContents = directoryContents.replace(/\.txt/gi,'');
 						directoryContents = directoryContents.split(',');
 
+						if($arguments[2]) $$_ = true;
+
 						var tourLinks = []; var tourCount = directoryContents.length;
 						for(i = 0; i < tourCount; i++){
-							if(directoryContents[i] == "closed") { directoryContents.splice(i,1); continue; }
+							if(directoryContents[i] == "closed" || (directoryContents[i] != $arguments[2] && $$_)) continue;
 							var currentTour = fs.readFileSync(`./tournaments/${directoryContents[i]}.txt`).toString().split(',');
-							tourLinks.push(`https://canary.discordapp.com/channels/<guild id>/<channel id>/${currentTour[1]}`);
+							tourLinks.push(`https://canary.discordapp.com/channels/<nisemon league id>/<channel id>/${currentTour[1]}`);
 						}
 
+						let $$$ = 0;
 						for(i = 0; i < tourCount; i++){
-							if(directoryContents[i] == undefined) continue;
-							returnString += `[${directoryContents[i]}](${tourLinks[i]}): `;
+							if(directoryContents[i] == "closed" || (directoryContents[i] != $arguments[2] && $$_)) {$$$++;continue;}
+							returnString += `[${directoryContents[i]}](${tourLinks[i-$$$]}): `;
 							tournament = fs.readFileSync(`tournaments/${directoryContents[i]}.txt`).toString().split(',');
 							returnString += tournament[0];
 							returnString += "\n";
 						}
+
+						if($$_) filtered = true;
 						returnString = returnString.trim();
 						if(callback) callback(returnString);
 					});
 				}
 
-				if(!$arguments[2]){
-					tourFindLoop($string => { 
-						var embed = new RichEmbed()
-							.setTitle('Complete Tournament Listing')
-							.setDescription($string)
-							.setColor(0xEF2626)
-							.setFooter('#tournaments');
-						message.channel.send(embed);
-					});
-				}
+				tourFindLoop($string => { 
+					var embed = new RichEmbed()
+						.setDescription($string)
+						.setColor(0xEF2626)
+						.setFooter('#tournaments');
+					if(filtered) embed.setTitle('Filtered Tournament Listing');
+					else embed.setTitle('Complete Tournament Listing');
+					message.channel.send(embed);
+				});
 			}
 			else{
 				message.channel.send("You're not allowed to use this command, silly.");
