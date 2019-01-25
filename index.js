@@ -17,7 +17,8 @@ console.log = function(){
 
 // Operations to run on ready
 client.on('ready', () => {
-	console.log('Nameless.js rewrite build pre-1 ready!');
+	console.log('Nameless.js rewrite public build ready!');
+	// Declare a command prefix
 	cmds = new cmd('.!');
 });
 
