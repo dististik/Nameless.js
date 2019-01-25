@@ -16,8 +16,8 @@ module.exports = class Commands{
 
 	// Full command listing
 	command($msg,$args){
-		// Remove prefix from command
-		$args[0] = $args[0].substr(this.prefix.length);
+		// Remove prefix from command and check alias
+		$args[0] = checkAlias($args[0].substr(this.prefix.length));
 		// Commands without arguments
 		if(!$args[1]){
 			switch ($args[0]){
@@ -110,4 +110,19 @@ module.exports = class Commands{
 			}
 		}
 	}
+}
+
+// Initiate command alias associative array
+let list = [];
+// Add all aliases here
+list['calculator'] = 'calc';
+list['rules'] = 'rule';
+list['tournament'] = 'tour';
+list['typechart'] = 'chart';
+list['weakness'] = 'weak';
+
+// Function for checking if the submitted command is an alias
+function checkAlias(alias){
+	if(!list[alias]) return alias;
+	else return list[alias];
 }
