@@ -6,36 +6,64 @@ const typeChart = require('./weakness_chart.js');
 const fs = require('fs');
 const config = require('./config.json');
 const reuse = require('./reusable.js');
+const helpi = require('./help.json');
+const asset = require('./textassets.js')
 
 // Commands class
 module.exports = class Commands{
 	// Find the current prefix and set it for use later
 	constructor(prefix){
 		this.prefix = prefix;
+		this.assets = new asset();
 	}
 
 	// Full command listing
 	command($msg,$args){
 		// Remove prefix from command and check alias
 		$args[0] = checkAlias($args[0].substr(this.prefix.length));
-		// Commands without arguments
+		// Commands with optional arguments (always sends a message on a match)
+		switch ($args[0]){
+			// Actually helpful
+
+			case 'help': // Retrieve info about command listing
+				if(!$args[1]){
+					$msg.channel.send(this.assets.helpEmbed);
+					return;
+				}
+				if($args[1] && !$args[2]){
+					if(this.assets.helpFunction(4,$args[1])){
+						this.assets.commandEmbed
+							.setDescription(this.assets.helpFunction(4,$args[1]))
+							.setFooter(`Command info: ${$args[1]}`);
+						$msg.channel.send(this.assets.commandEmbed);
+						return;
+						}
+					else {
+						$msg.channel.send("Command not found.");
+						return;
+					}
+				}
+
+			// Easter eggs
+		}
+		// Commands without arguments (only sends a message if there are no aruments)
 		if(!$args[1]){
 			switch ($args[0]){
 				// Actually helpful
 
 				case 'hello': // Basic ping command
 					$msg.channel.send("Hi! I'm Nameless!");
-					break;
+					return;
 				case 'calc': // Links to relevant damage calculators
 					$msg.channel.send("Smogon's Damage Calculator: https://pokemonshowdown.com/damagecalc/");
-					break;
+					return;
 				case 'chart': // Sends image of current type chart
 					let atch = new Attachment('attatchments/images/type_chart.png');
 					$msg.channel.send(atch);
-					break;
+					return;
 				case 'invite': // Sends invite link
 					$msg.channel.send("Here's the permalink to join the server! https://discord.gg/kvWncZx");
-					break;
+					return;
 
 				// Easter eggs
 
@@ -43,72 +71,73 @@ module.exports = class Commands{
 					switch (Math.floor(Math.random() * 7)){
 						case 0:
 							$msg.channel.send("Bweh!");
-							break;
+							return;
 						case 1:
 							$msg.channel.send("W-Why are you doing this?");
-							break;
+							return;
 						case 2:
 							$msg.channel.send("H-Huh?! Can I help you with something..?");
-							break;
+							return;
 						case 3:
 							$msg.channel.send("Ehh?! Why do people have such a fixation with touching my head...");
-							break;
+							return;
 						case 4:
 							$msg.channel.send("T-Thank you, but this really isn't necessary.");
-							break;
+							return;
 						case 5:
 							$msg.channel.send("Don't you think this is a little embarrassing..?");
-							break;
+							return;
 						case 6:
 							$msg.channel.send("Why don't you just say hello to me like a normal person??");
-							break;
+							return;
 					}
-					break;
 			}
 		}
-		// Commands with arguments
+		// Commands with required arguments (only sends a message if there's at least one argument)
 		if($args[1]){
 			switch ($args[0]){
 				//Actually helpful commands
 
 				// Easter eggs
 
-				case 'quote':
+				case 'quote': // Have Nameless recite a quote
 					switch ($args[1]){
 						case 'beyond':
 							$msg.channel.send("PLUS ULTRA!");
-							break;
+							return;
 						case 'magic':
 							$msg.channel.send("A believing heart is your magic!");
-							break;
+							return;
 						case 'jevil':
 							if( Math.random() > 0.5 )
 								$msg.channel.send("Chaos chaos!");
 							else
 								$msg.channel.send("I can do anything!");
-							break;
+							return;
 						case 'one-two':
 							$msg.channel.send("Get up on the Hydra's back!");
-							break;
+							return;
 						case 'rapture':
 							$msg.channel.send("Would you kindly...");
-							break;
+							return;
 						case 'maria':
 							$msg.channel.send("A corpse... should be left well alone.");
-							break;
+							return;
 						case 'key':
 							$msg.channel.send("Let your heart be your guiding key.");
-							break;
+							return;
 						case 'sleep':
 							$msg.channel.send("I dream of Mareep.");
-							break;
+							return;
 						case 'nico':
 							$msg.channel.send("にっこにっこにー");
-							break;
+							return;
 					}
-					break;
 			}
 		}
+		// Commands with optional arguments
+
+		// End
 	}
 }
 
