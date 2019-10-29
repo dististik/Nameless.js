@@ -1,2 +1,4 @@
 src/config.json
 src/*.bat
+src/package.json
+src/package-lock.json
