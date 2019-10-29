@@ -1,0 +1,77 @@
+{
+	"hello" : 
+	{
+		"access" : 0,
+		"short" : "Say hello to me!",
+		"desc" : "Most basic possible ping command used to test if Nameless is currently responsive to commands.",
+		"arguments" : "none",
+		"aliases" : "none"
+	},
+	"calc" :
+	{
+		"access" : 0,
+		"short" : "Links to any relevant damage calculator.",
+		"desc" : "Sends a link any of the currently relevant competitive damage calculators.",
+		"arguments" : "none",
+		"aliases" : "calculator"
+	},
+	"chart" :
+	{
+		"access" : 0,
+		"short" : "Sends image of current type chart.",
+		"desc" : "Sends an image of the most recent type affinity chart.",
+		"arguments" : "none",
+		"aliases" : "typechart"
+	},
+	"invite" :
+	{
+		"access" : 0,
+		"short" : "Sends an invite link to this server.",
+		"desc" : "Sends the perminant invite link made for this server.",
+		"arguments" : "none",
+		"aliases" : "none"
+	},
+	"rule" :
+	{
+		"access" : 0,
+		"short" : "Sends one of the main rules for this server.",
+		"desc" : "Sends one of the four main rules for this server. Chat moderators may use this command to warn others about breaking the rules.",
+		"arguments" : "rule, user, reason",
+		"aliases" : "rules"
+	},
+	"tour" :
+	{
+		"access" : 0,
+		"short" : "Ties a tournament to a specific message.",
+		"desc" : "Tournament coordinators may use this command to have Nameless bind a randomly generated tournament to a message for easy registration. Any user may use this command to find a specific tournament or a list of all of the current tournaments.",
+		"arguments" : "action, <message id || tour code>",
+		"aliases" : "tournament"
+	},
+	"weak" :
+	{
+		"access" : 0,
+		"short" : "Sends all the type advantages for a type or type combination.",
+		"desc" : "Sends all of the weaknesses, resistances, and immunities for any type or type combination.",
+		"arguments" : "type, type",
+		"aliases" : "weakness"
+	},
+
+
+
+	"delete" :
+	{
+		"access" : 1,
+		"short" : "Deletes a specified number of messages.",
+		"desc" : "Deletes a specified number of messages younger than two weeks with a maximum of 100 at a time.",
+		"arguments" : "number",
+		"aliases" : "none"
+	},
+	"verify" :
+	{
+		"access" : 1,
+		"short" : "Changes the server's varification level.",
+		"desc" : "Changes the requirements to send messages in this server (verification level). Nameless cannot set the varification level lower than 1 and it is highly recommended that the level is only changed to 4 in dire situations. There is no level greater than 4 or less than 0.",
+		"arguments" : "number",
+		"aliases" : "none"
+	}
+}
