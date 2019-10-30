@@ -1,0 +1,39 @@
+{
+	"beyond" : "PLUS ULTRA!",
+	"magic" : "A believing heart is your magic!",
+	"jevil" : {
+		"random" : true,
+		"options" : [
+			"Chaos chaos!",
+			"I can do anything!"
+		]
+	},
+	"one-two" : "Get up on the Hydra's back!",
+	"rapture" : "Would you kindly...",
+	"maria" : "A corpse... should be left well alone.",
+	"key" : "Let your heart be your guiding key.",
+	"sleep" : "I dream of Mareep.",
+	"nico" : "にっこにっこにー",
+	"claro" : {
+		"random" : true,
+		"conditional" : [true,"userid"],
+		"condition" : ["266698342103252993"],
+		"options" : [
+			[
+				"No.",
+				"\"Guys when am I getting a quote?\" that's you that's what you sound like",
+				"Please stop asking."
+			],
+			[
+				"Why are you validating him?",
+				"You have a terrible sense of humour.",
+				"Go make your own Discord bot, you absolute nerds."
+			]
+		]
+	},
+	"yorha" : "Glory to Mankind",
+	"pirate" : "It's just good business",
+	"transistor" : "Quote()",
+	"youtube" : "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
+	"illuminati" : "Shhhhhhhhhhh"
+}
