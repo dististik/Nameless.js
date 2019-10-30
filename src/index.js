@@ -15,9 +15,9 @@ for(const file of commandFiles){
 }
 
 // common event handling
-// code to execute when the client as successfully connected to discord
+// code to execute when the client is successfully connected to discord
 client.on('ready', () => {
-	console.log('Nameless rewrite build 0 is ready!');
+	console.log('Nameless rewrite build 1 is ready!');
 });
 
 // code to execute when a message is recieved
@@ -25,13 +25,15 @@ client.on('message', message => {
 	// if the message doesn't begin with the command prefix or is from any bot, return
 	if(!message.content.startsWith(Config.prefix) || message.author.bot) return;
 	// create a list of arguments and find what the command is (non-case sensitive)
-	const args = message.content.slice(Config.prefix.length).toLowerCase().split(" ");
-	const command = args.shift();
-	// check if the requested command even exists, return if not
-	if(!client.commands.has(command)) return;
+	const args = message.content.slice(Config.prefix.length).toLowerCase().split(/ +/);
+	const commandName = args.shift().toLowerCase();
+	// search for command/command alias, return if none found
+	const command = client.commands.get(commandName)
+		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+	if(!command) return;
 	// execute command, now featuring error handler imagine that
 	try{
-		client.commands.get(command).execute(message,args);
+		command.execute(message,args);
 	} catch(error) {
 		console.error(error);
 		message.reply('An unexpected error occurred while trying to execute that command.');
