@@ -23,15 +23,17 @@ client.on('ready', () => {
 // code to execute when a message is recieved
 client.on('message', message => {
 	// if the message doesn't begin with the command prefix or is from any bot, return
-	if(!message.content.startsWith(Config.prefix) || message.author.bot) return;
+	if(!message.content.startsWith(Config.blancPrefix) || message.author.bot) return;
 	// create a list of arguments and find what the command is (non-case sensitive)
-	const args = message.content.slice(Config.prefix.length).toLowerCase().split(" ");
-	const command = args.shift();
+	const args = message.content.slice(Config.blancPrefix.length).toLowerCase().split(" ");
+	const commandName = args.shift();
 	// check if the requested command even exists, return if not
-	if(!client.commands.has(command)) return;
+	if(!client.commands.has(commandName)) return;
+	// retrieve command
+	const command = client.commands.get(commandName);
 	// execute command, now featuring error handler imagine that
 	try{
-		client.commands.get(command).execute(message,args);
+		command.execute(message,args);
 	} catch(error) {
 		console.error(error);
 		message.reply('An unexpected error occurred while trying to execute that command.');
@@ -44,4 +46,4 @@ client.on('error', () => {
 });
 
 // login processing - do NOT write her login token in plain text
-client.login(Config.token);
+client.login(Config.blancToken);
