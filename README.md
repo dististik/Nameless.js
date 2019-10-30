@@ -24,7 +24,7 @@ Notably, a `config.json` is not included in any of Nameless' releases. In order 
 }
 ```
 
-Once you have both Node, version 6.0.0 or higher, and a config file in the same directory as the `index.json` file, launching the provided batch file or running `node index.js` in the same directory as the `index.json` file should bring her online.
+Once you have both Node, version 6.0.0 or higher, and a config file in the same directory as the `index.js` file, launching the provided batch file or running `node index.js` in the same directory as the `index.js` file should bring her online.
 
 ## Notable dependencies
 + [discordjs/discord.js](https://github.com/discordjs/discord.js)
