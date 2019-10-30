@@ -25,7 +25,7 @@ module.exports = {
 			message.channel.send(Quotes[args[0]]);
 			return;
 		} // If there are random responces, check if they're conditional
-		else if(!Quotes[args[0]].conditional){
+		else if(!Quotes[args[0]].conditional || !Quote.[args[0]].conditional[0]){
 			// If they aren't conditional, send a random responce
 			randomQuote(message,Quotes[args[0]].options);
 		} // If the random responces are conditional, check if the condition is the author's userid
