@@ -671,4 +671,4 @@ client.on('error', () => {
 	console.log("Client encountered an error");
 });
 //Will export string to external txt ASAP
-client.login("MjQxMzkxNjU1NTE5NzgwODY5.DpW-Gw.jchqA57qQ1HTL9uwUctYS45IPuc");
+client.login("Broken token lol");
