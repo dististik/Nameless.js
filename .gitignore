@@ -1,0 +1,8 @@
+src/config.json
+src/*.bat
+src/package.json
+src/package-lock.json
+src/attatchments
+src/node_modules
+src/tournaments
+*.zip
