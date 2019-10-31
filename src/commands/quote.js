@@ -7,7 +7,7 @@ function randomQuote(message,quoteArray){
 		if(Math.random() > 0.5) { message.channel.send(quoteArray[0]); return; }
 		else { message.channel.send(quoteArray[1]); return; }
 	} else {
-		message.channel.send(quoteArray[Math.floor(Math.random() * (quoteArray.length - 1))]);
+		message.channel.send(quoteArray[Math.floor(Math.random() * (quoteArray.length))]);
 		return;
 	}
 }
