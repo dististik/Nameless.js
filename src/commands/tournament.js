@@ -17,6 +17,19 @@ class Tournament {
 		this.emoji_id = emojiid;
 		this.roster = roster;
 		this.uid = uid;
+		this.links = ["download","view"];
+	}
+}
+// Function for creating tournament embeds
+function tourEmbed(obj,type){
+	switch(type){
+		case "roster":
+			let embed = Discord.RichEmbed()
+				.setColor(0x37E56B)
+				.setTitle(`${obj.uid} - Tournament Roster`)
+				.setDescription(`**Players**: ${obj.roster.length}\n**Status**: Closed\n[\`download\`](${obj.links[0]}) | [\`view\`](${obj.links[1]})`)
+				.setFooter("#tournaments");
+			return embed;
 	}
 }
 
@@ -51,7 +64,6 @@ module.exports = {
 				// Generate a random tournament ID
 				let tourID = RandomID.randomCode();
 				// If the random ID is taken, generate a new one
-				console.log(fs.existsSync('tournaments/K995.txt'));
 				while (fs.existsSync(`tournaments/${tourID}.json`))
 					tourID = RandomID.randomCode();
 				// Grab a random emoji from Nameless' list
@@ -72,6 +84,49 @@ module.exports = {
 			case "registered":
 			case "players":
 			case "participants":
+				// If the message wasn't sent in either of the proper channels, return
+				if(message.channel.id != DiscordIDs.channels['tournaments'] && message.channel.id != DiscordIDs.channels['bot-test']){
+					message.channel.send("Please send this request the tournaments channel.");
+					return;
+				}
+				// Check if a tournament ID was supplied and if so, if it exists
+				if(!args[1]) { message.channel.send("Please provide a tournament ID."); return; }
+				if(!fs.existsSync(`tournaments/${args[1]}.json`)) { message.channel.send("That tournament does not exist."); return; }
+				// Create an object from the specified tournament file
+				let tourString = fs.readFileSync(`tournaments/${args[1]}.json`);
+				let $tour = JSON.parse(tourString);
+				// If the fetched tournament has closed it's signups, send the registered list and return
+				if($tour.links[0] != "download"){
+					message.channel.send(tourEmbed($tour,"roster"));
+					return;
+				}
+				// If the fetched tournament is still open, edit the roster and fetch the proper attachment
+				$tour.roster = [].slice();
+				// Fetch the tournament message and it's reactions
+				message.guild.channels.get(message.channel.fetchMessage($tour.message_id)
+					.then($message => {
+						let reactions = $message.reactions.get($tour.emoji_id);
+						// Process the reactions and place them in the tournament object's roster array
+						reactions.fetchUsers(100).then($map => {
+							// Assign values to an array and initialise array for full user names
+							let values = Array.from($map);
+							let users = [];
+							// Itterate over values array and pull full usernames into users array
+							for(i=0;i<values.length;i++){
+								// Ignore bot accounts
+								if(values[i][1].bot) continue;
+								// Construct string using template and push it into the array
+								let x = `${values[i][1].username}#${values[i][1].discriminator}`;
+								users.push(x);
+							}
+							/* UNFINISHED -- Still to-do:
+							 * - Create string out of users array (will likely replace users.push with this)
+							 * - Create a text file and send it to the emoji guild's attachments channel (ids in required json)
+							 * - Copy the download URL and a view URl using txt.discord.website and put them in tournament obj links array
+							 * - Call tour embed function and send message
+							 */
+						});
+					});
 				return;
 			case "close":
 			case "end":
