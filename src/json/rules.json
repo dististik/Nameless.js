@@ -1,0 +1,21 @@
+{
+	"mods" : {
+		"title" : "Moderators Rule",
+		"text" : "**Listen to moderators, coordinators, and gym leaders** - We're here to maintain chat and lend a hand to everyone who might need it. By going out of your way to defy us, you're only makes things harder for everyone.\n\nThis includes:\n- Explicitly denying requests made by staff with colored roles.\n- Assuming the worst in, or actively disrespecting staff with colored roles."
+	},
+
+	"respect" : {
+		"title" : "Respect Rule",
+		"text" : "**Be polite** - Respect others and don't go out of your way to harass or insult others.\n\nThis includes:\n- Being overly offensive to one person.\n- Being overly offensive to any group of people.\n- Weaponizing your opinion.\n- Over generalising or using negative assosiation with a group of people or a specific person.\n- Consistantly being hateful or negative to the point where the atmosphere of the chat in general is affected."
+	},
+
+	"illegal" : {
+		"title" : "Illegal Rule",
+		"text" : "**Don't break the law** - Anyone strongly advocating illegal activities, posting pornography, or posting links to illegal websites will be banned.\n\nThis includes:\n- Advocating illegal practices.\n- Helping to give resources in order to practice illegal activities.\n- Posting pornography in chat anywhere."
+	},
+
+	"spam" : {
+		"title" : "Spam Rule",
+		"text" : "**Speak to be understood, not to be heard** - Don't spam chat with several short messages that have no meaning and don't speak in a language other than English, intentionally improper grammar, or all caps for prolonged amounts of time.\n\nThis includes:\n- Sending the same message repeatedly.\n- Intentionally speaking in a language that isn't English to confuse others.\n- Sending multiple messages in a row with formatted text.\n- Speaking with inentionally improper grammar."
+	}
+}
