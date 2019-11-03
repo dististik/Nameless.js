@@ -51,7 +51,8 @@ module.exports = {
 				// Generate a random tournament ID
 				let tourID = RandomID.randomCode();
 				// If the random ID is taken, generate a new one
-				while (fs.existsSync(`../tournaments/${tourID}.json`))
+				console.log(fs.existsSync('tournaments/K995.txt'));
+				while (fs.existsSync(`tournaments/${tourID}.json`))
 					tourID = RandomID.randomCode();
 				// Grab a random emoji from Nameless' list
 				let reactEmoji = RandomEmoji.randomEmoji(message.client);
