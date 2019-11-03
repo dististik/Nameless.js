@@ -16,11 +16,12 @@ While it is likely currently out of date, see the [contributing markdown](https:
 ## Installing
 Nameless runs on [Node.js](https://nodejs.org/en/) using the Discord API library, [Discord.js](https://github.com/discordjs/discord.js). As such a local install of Node, version 6.0.0 or higher, is required to run her on any machine she's installed on. Instead of clogging up the repo with them, all of her current dependencies are only included in her [release files](https://github.com/dististik/Nameless.js/releases) which are kept in for ease of launch using the included batch file. 
 
-Notably, a `config.json` is not included in any of Nameless' releases. In order for her to run, you will either need a config file provided to you in the event that you're trusted to run a backup of her, or need to create your own using the token of your own Discord bot application. For the current running build of Nameless, her config file should look like this:
+Notably, a `config.json` is not included in any of Nameless' releases. In order for her to run, you will either need a config file provided to you in the event that you're trusted to run a backup of her, or need to create your own using the token of your own Discord bot application. For the rewrite build of Nameless, her config file should currently look like this:
 
 ```json
 {
-	"token" : "DISCORD BOT TOKEN"
+	"token" : "DISCORD BOT TOKEN",
+	"prefix" : "COMMAND PREFIX"
 }
 ```
 
