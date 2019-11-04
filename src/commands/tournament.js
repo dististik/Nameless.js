@@ -48,6 +48,47 @@ async function getTextFile(channel){
 	// Return ID
 	return $return;
 }
+// Function for processing the roster of open or closing (not yet closed) tournaments
+function getRoster(obj,message){
+	// Empty the existing roster in case any changes have happened to already existing registries
+	obj.roster = [].slice();
+	// Fetch the tournament message and it's reactions
+	message.channel.fetchMessage(obj.message_id)
+		.then($message => {
+			let reactions = $message.reactions.get(obj.emoji_id);
+			// Process the reactions and place them in the tournament object's roster array
+			reactions.fetchUsers(100).then($map => {
+				// Assign values to an array and initialise a string mirror of tour object roster array
+				let values = Array.from($map);
+				let userString = "";
+				// Itterate over values array and pull full usernames into users array
+				for(i=0;i<values.length;i++){
+					// Ignore bot accounts
+					if(values[i][1].bot) continue;
+					// Construct string using template, push it into the user array, and mirror it to the user string
+					let x = `${values[i][1].username}#${values[i][1].discriminator}`;
+					obj.roster.push(x); userString += `${x}\n`;
+				}
+				// Create text file for tournament roster
+				fs.writeFile(`tournaments/roster.txt`,userString,(err) => {
+					if (err) throw err;
+					// Send text file to private server and grab it
+					let attFile = message.client.guilds.get(DiscordIDs.guilds.emoji)
+						.channels.get(DiscordIDs.channels['attachments']);
+					attFile.send(new Discord.Attachment('tournaments/roster.txt')).then($txt => {
+						// Grab .txt file attachment ID from message attachment keys
+						let textID = $txt.attachments.keys().next().value;
+						// Set tournament link array to the appropriate links
+						obj.links[0] = `https://cdn.discordapp.com/attachments/${DiscordIDs.channels['attachments']}/${textID}/roster.txt`;
+						obj.links[1] = `https://txt.discord.website/?txt=${DiscordIDs.channels['attachments']}/${textID}/roster`;
+						// Send roster embed and exit command
+						return tourEmbed($tour,"roster");
+					});
+					
+				});
+			});
+		});
+}
 
 module.exports = {
 	name: "tournament",
@@ -97,6 +138,7 @@ module.exports = {
 					message.channel.send(`Started tournament **${tourID}** (${reactEmoji.toString()})`);
 				});
 				return;
+			// Check the roster of a requested tournament
 			case "registered":
 			case "players":
 			case "participants":
@@ -111,45 +153,11 @@ module.exports = {
 					message.channel.send(tourEmbed($tour,"roster"));
 					return;
 				}
-				// If the fetched tournament is still open, edit the roster and fetch the proper attachment
-				$tour.roster = [].slice();
-				// Fetch the tournament message and it's reactions
-				message.channel.fetchMessage($tour.message_id)
-					.then($message => {
-						let reactions = $message.reactions.get($tour.emoji_id);
-						// Process the reactions and place them in the tournament object's roster array
-						reactions.fetchUsers(100).then($map => {
-							// Assign values to an array and initialise a string mirror of tour object roster array
-							let values = Array.from($map);
-							let userString = "";
-							// Itterate over values array and pull full usernames into users array
-							for(i=0;i<values.length;i++){
-								// Ignore bot accounts
-								if(values[i][1].bot) continue;
-								// Construct string using template, push it into the user array, and mirror it to the user string
-								let x = `${values[i][1].username}#${values[i][1].discriminator}`;
-								$tour.roster.push(x); userString += `${x}\n`;
-							}
-							// Create text file for tournament roster
-							fs.writeFile(`tournaments/roster.txt`,userString,(err) => {
-								if (err) throw err;
-								// Send text file to private server and grab it
-								let attFile = message.client.guilds.get(DiscordIDs.guilds.emoji)
-									.channels.get(DiscordIDs.channels['attachments']);
-								attFile.send(new Discord.Attachment('tournaments/roster.txt')).then($txt => {
-									// Grab .txt file attachment ID from message attachment keys
-									let textID = $txt.attachments.keys().next().value;
-									// Set tournament link array to the appropriate links
-									$tour.links[0] = `https://cdn.discordapp.com/attachments/${DiscordIDs.channels['attachments']}/${textID}/roster.txt`;
-									$tour.links[1] = `https://txt.discord.website/?txt=${DiscordIDs.channels['attachments']}/${textID}/roster`;
-									// Send roster embed and exit command
-									message.channel.send(tourEmbed($tour,"roster"));
-								});
-								
-							});
-						});
-					});
+				// If the fetched tournament is still open, process the roster and send the resulting embed
+				let $embed = getRoster($tour,message);
+				message.channel.send($embed);
 				return;
+			// End signups for a requested tournament
 			case "close":
 			case "end":
 				return;
