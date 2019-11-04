@@ -41,7 +41,7 @@ async function getTextFile(channel){
 	// Initialise blank return string
 	let $return = "";
 	// Wait for the client to finish sending the file
-	await channel.send(new Discord.Attachment('tournaments/roster.txt')).then($message => {
+	await channel.send(new Discord.Attachment('attatchments/text/roster.txt')).then($message => {
 		// Assign message ID to string
 		$return = channel.lastMessageID;
 	});
@@ -49,7 +49,7 @@ async function getTextFile(channel){
 	return $return;
 }
 // Function for processing the roster of open or closing (not yet closed) tournaments
-function getRoster(obj,message){
+function getRoster(obj,message,send){
 	// Empty the existing roster in case any changes have happened to already existing registries
 	obj.roster = [].slice();
 	// Fetch the tournament message and it's reactions
@@ -70,21 +70,31 @@ function getRoster(obj,message){
 					obj.roster.push(x); userString += `${x}\n`;
 				}
 				// Create text file for tournament roster
-				fs.writeFile(`tournaments/roster.txt`,userString,(err) => {
+				fs.writeFile(`attatchments/text/roster.txt`,userString,(err) => {
 					if (err) throw err;
 					// Send text file to private server and grab it
 					let attFile = message.client.guilds.get(DiscordIDs.guilds.emoji)
 						.channels.get(DiscordIDs.channels['attachments']);
-					attFile.send(new Discord.Attachment('tournaments/roster.txt')).then($txt => {
+					attFile.send(new Discord.Attachment('attatchments/text/roster.txt')).then($txt => {
 						// Grab .txt file attachment ID from message attachment keys
 						let textID = $txt.attachments.keys().next().value;
 						// Set tournament link array to the appropriate links
 						obj.links[0] = `https://cdn.discordapp.com/attachments/${DiscordIDs.channels['attachments']}/${textID}/roster.txt`;
 						obj.links[1] = `https://txt.discord.website/?txt=${DiscordIDs.channels['attachments']}/${textID}/roster`;
-						// Send roster embed and exit command
-						return tourEmbed($tour,"roster");
+						// Send the embed if requested to, otherwise overwrite old tournament JSON
+						if (send) { message.channel.send(tourEmbed(obj,"roster")); return; }
+						else {
+							// Assign JSON to old tournament string
+							tourString = JSON.stringify(obj);
+							// Overwrite old tournament file
+							fs.writeFile(`tournaments/${obj.uid}.json`,tourString,(err) => {
+								if(err) throw err;
+								console.log(`Tournament file for '${obj.uid}' updated`);
+								// Send confirmation message
+								message.channel.send(`Tournament **${obj.uid}** has been closed`);
+							});
+						}
 					});
-					
 				});
 			});
 		});
@@ -146,20 +156,29 @@ module.exports = {
 				if(!args[1]) { message.channel.send("Please provide a tournament ID."); return; }
 				if(!fs.existsSync(`tournaments/${args[1]}.json`)) { message.channel.send("That tournament does not exist."); return; }
 				// Create an object from the specified tournament file
-				let tourString = fs.readFileSync(`tournaments/${args[1]}.json`);
-				let $tour = JSON.parse(tourString);
+				let tourContents = fs.readFileSync(`tournaments/${args[1]}.json`);
+				let $tour = JSON.parse(tourContents);
 				// If the fetched tournament has closed it's signups, send the registered list and return
 				if($tour.links[0] != "download"){
 					message.channel.send(tourEmbed($tour,"roster"));
 					return;
 				}
 				// If the fetched tournament is still open, process the roster and send the resulting embed
-				let $embed = getRoster($tour,message);
-				message.channel.send($embed);
+				getRoster($tour,message,true);
 				return;
 			// End signups for a requested tournament
 			case "close":
 			case "end":
+				// Check if a tournament ID was supplied and if so, if it exists
+				if(!args[1]) { message.channel.send("Please provide a tournament ID."); return; }
+				if(!fs.existsSync(`tournaments/${args[1]}.json`)) { message.channel.send("That tournament does not exist."); return; }
+				// Create an object from the specified tournament file
+				let tourString = fs.readFileSync(`tournaments/${args[1]}.json`);
+				let tournObj = JSON.parse(tourString);
+				// Check if the tournament signups have already ended
+				if(!tournObj.status) { message.channel.send("Signups for this tournament have already been closed."); return; }
+				// Process the roster and overwrite old tournament file
+				getRoster(tournObj,message,false);
 				return;
 			case "kill":
 			case "delete":
