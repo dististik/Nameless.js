@@ -180,8 +180,22 @@ module.exports = {
 				// Process the roster and overwrite old tournament file
 				getRoster(tournObj,message,false);
 				return;
+			// Delete a tournament file
 			case "kill":
 			case "delete":
+				// Check if the user is a coordinator
+				if(!message.member.roles.has(DiscordIDs.roles.coordinator)) { 
+					message.channel.send("Only a coordinator can delete tournament files."); 
+					return; 
+				}
+				// Check if a tournament ID was supplied and if so, if it exists
+				if(!args[1]) { message.channel.send("Please provide a tournament ID."); return; }
+				if(!fs.existsSync(`tournaments/${args[1]}.json`)) { message.channel.send("That tournament does not exist."); return; }
+				// Delete file
+				fs.unlinkSync(`tournaments/${args[1]}.json`);
+				// Log in console and send confirmation message
+				console.log(`Tournament '${args[1].toUpperCase()}' has been killed by ${message.member.displayName}`);
+				message.channel.send(`The requested tournament has been removed from my memory (${args[1].toUpperCase()})`);
 				return;
 			case "find":
 			case "search":
