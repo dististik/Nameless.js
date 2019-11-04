@@ -56,6 +56,11 @@ module.exports = {
 	execute(message,args){
 		// Return if sent in DMs
 		if(!message.guild) return;
+		// If the message wasn't sent in either of the proper channels, return
+		if(message.channel.id != DiscordIDs.channels['tournaments'] && message.channel.id != DiscordIDs.channels['bot-test']){
+			message.channel.send("Please send this request the tournaments channel.");
+			return;
+		}
 		// Check if message author has the role required to start a tournament
 		for(i=0;i<Perms.length;i++){
 			if(message.member.roles.has(Perms[i])) break;
@@ -72,11 +77,6 @@ module.exports = {
 			// Start a new tournament
 			case "start":
 			case "create":
-				// If sent outside of the tournament or test channel, exit command
-				if(message.channel.id != DiscordIDs.channels['tournaments'] && message.channel.id != DiscordIDs.channels['bot-test']){
-					message.channel.send("Please begin a tournament in the proper channels.");
-					return;
-				}
 				// Generate a random tournament ID
 				let tourID = RandomID.randomCode();
 				// If the random ID is taken, generate a new one
@@ -100,11 +100,6 @@ module.exports = {
 			case "registered":
 			case "players":
 			case "participants":
-				// If the message wasn't sent in either of the proper channels, return
-				if(message.channel.id != DiscordIDs.channels['tournaments'] && message.channel.id != DiscordIDs.channels['bot-test']){
-					message.channel.send("Please send this request the tournaments channel.");
-					return;
-				}
 				// Check if a tournament ID was supplied and if so, if it exists
 				if(!args[1]) { message.channel.send("Please provide a tournament ID."); return; }
 				if(!fs.existsSync(`tournaments/${args[1]}.json`)) { message.channel.send("That tournament does not exist."); return; }
