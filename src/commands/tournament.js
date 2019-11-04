@@ -24,13 +24,29 @@ class Tournament {
 function tourEmbed(obj,type){
 	switch(type){
 		case "roster":
-			let embed = Discord.RichEmbed()
+			// Initialise string for tour status and set it to the correct string depending on obj propety
+			let tourStatus = "";
+			if(!obj.status) tourStatus = "Closed"; else tourStatus = "Open";
+			// Create and return embed
+			let embed = new Discord.RichEmbed()
 				.setColor(0x37E56B)
 				.setTitle(`${obj.uid} - Tournament Roster`)
-				.setDescription(`**Players**: ${obj.roster.length}\n**Status**: Closed\n[\`download\`](${obj.links[0]}) | [\`view\`](${obj.links[1]})`)
+				.setDescription(`**Players**: ${obj.roster.length}\n**Status**: ${tourStatus}\n[download](${obj.links[0]}) | [view](${obj.links[1]})`)
 				.setFooter("#tournaments");
 			return embed;
 	}
+}
+// Function for fetching newly sent roster text files
+async function getTextFile(channel){
+	// Initialise blank return string
+	let $return = "";
+	// Wait for the client to finish sending the file
+	await channel.send(new Discord.Attachment('tournaments/roster.txt')).then($message => {
+		// Assign message ID to string
+		$return = channel.lastMessageID;
+	});
+	// Return ID
+	return $return;
 }
 
 module.exports = {
@@ -103,28 +119,39 @@ module.exports = {
 				// If the fetched tournament is still open, edit the roster and fetch the proper attachment
 				$tour.roster = [].slice();
 				// Fetch the tournament message and it's reactions
-				message.guild.channels.get(message.channel.fetchMessage($tour.message_id)
+				message.channel.fetchMessage($tour.message_id)
 					.then($message => {
 						let reactions = $message.reactions.get($tour.emoji_id);
 						// Process the reactions and place them in the tournament object's roster array
 						reactions.fetchUsers(100).then($map => {
-							// Assign values to an array and initialise array for full user names
+							// Assign values to an array and initialise a string mirror of tour object roster array
 							let values = Array.from($map);
-							let users = [];
+							let userString = "";
 							// Itterate over values array and pull full usernames into users array
 							for(i=0;i<values.length;i++){
 								// Ignore bot accounts
 								if(values[i][1].bot) continue;
-								// Construct string using template and push it into the array
+								// Construct string using template, push it into the user array, and mirror it to the user string
 								let x = `${values[i][1].username}#${values[i][1].discriminator}`;
-								users.push(x);
+								$tour.roster.push(x); userString += `${x}\n`;
 							}
-							/* UNFINISHED -- Still to-do:
-							 * - Create string out of users array (will likely replace users.push with this)
-							 * - Create a text file and send it to the emoji guild's attachments channel (ids in required json)
-							 * - Copy the download URL and a view URl using txt.discord.website and put them in tournament obj links array
-							 * - Call tour embed function and send message
-							 */
+							// Create text file for tournament roster
+							fs.writeFile(`tournaments/roster.txt`,userString,(err) => {
+								if (err) throw err;
+								// Send text file to private server and grab it
+								let attFile = message.client.guilds.get(DiscordIDs.guilds.emoji)
+									.channels.get(DiscordIDs.channels['attachments']);
+								attFile.send(new Discord.Attachment('tournaments/roster.txt')).then($txt => {
+									// Grab .txt file attachment ID from message attachment keys
+									let textID = $txt.attachments.keys().next().value;
+									// Set tournament link array to the appropriate links
+									$tour.links[0] = `https://cdn.discordapp.com/attachments/${DiscordIDs.channels['attachments']}/${textID}/roster.txt`;
+									$tour.links[1] = `https://txt.discord.website/?txt=${DiscordIDs.channels['attachments']}/${textID}/roster`;
+									// Send roster embed and exit command
+									message.channel.send(tourEmbed($tour,"roster"));
+								});
+								
+							});
 						});
 					});
 				return;
@@ -140,4 +167,3 @@ module.exports = {
 		}
 	}
 }
-// !tour {keyword} {message id}
