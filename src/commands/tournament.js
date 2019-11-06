@@ -29,7 +29,7 @@ function tourEmbed(obj,type){
 			if(!obj.status) tourStatus = "Closed"; else tourStatus = "Open";
 			// Create and return embed
 			let embed = new Discord.RichEmbed()
-				.setColor(0x37E56B)
+				.setColor(0xE57274)
 				.setTitle(`${obj.uid} - Tournament Roster`)
 				.setDescription(`**Players**: ${obj.roster.length}\n**Status**: ${tourStatus}\n[download](${obj.links[0]}) | [view](${obj.links[1]})`)
 				.setFooter("#tournaments");
