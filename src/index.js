@@ -153,8 +153,8 @@ client.on('message', message => {
 				message.channel.send('This user is already entered in the gacha.');
 				return false;
 			}
-			if(!Gacha.validFormats($args[3].toLowerCase())){
-				message.channel.send("Invalid format.");
+			if(!Gacha.validFormats($args[3].toLowerCase()) || !$args[3]){
+				message.channel.send("Invalid or unprovided format.");
 				return false;
 			}
 
