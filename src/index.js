@@ -664,6 +664,9 @@ client.on('message', message => {
 				break;
 		}
 	}
+	if(message.content === '!codepls'){ //snarky reply to asking for commands
+		message.channel.send("I await your pull request :heart:\nhttps://github.com/dististik/Nameless.js");
+	}
 	if(message.content.toLowerCase().startsWith('!quote')){ //says a requested quote
 		var quote = message.toString().substr(7);
 		switch(quote){
