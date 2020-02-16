@@ -122,7 +122,7 @@
 	"Koffing":{"uber":false,"exiled":false,"roulette":false,"number":"109"},
 	"Weezing":{"uber":false,"exiled":false,"roulette":true,"number":"110"},
 	"Rhyhorn":{"uber":false,"exiled":false,"roulette":false,"number":"111"},
-	"Rhyperior":{"uber":false,"exiled":false,"roulette":true,"464"},
+	"Rhyperior":{"uber":false,"exiled":false,"roulette":true,"number":"464"},
 	"Rhydon":{"uber":false,"exiled":false,"roulette":true,"number":"112"},
 	"Chansey":{"uber":false,"exiled":false,"roulette":true,"number":"113"},
 	"Blissey":{"uber":false,"exiled":false,"roulette":true,"number":"242"},
