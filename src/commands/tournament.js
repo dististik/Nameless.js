@@ -177,6 +177,8 @@ module.exports = {
 				let tournObj = JSON.parse(tourString);
 				// Check if the tournament signups have already ended
 				if(!tournObj.status) { message.channel.send("Signups for this tournament have already been closed."); return; }
+				// If tournament signups have not ended, set the tournament object's status to false
+				tournObj.status = false;
 				// Process the roster and overwrite old tournament file
 				getRoster(tournObj,message,false);
 				return;
