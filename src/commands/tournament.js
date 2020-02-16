@@ -199,9 +199,6 @@ module.exports = {
 				console.log(`Tournament '${args[1].toUpperCase()}' has been killed by ${message.member.displayName}`);
 				message.channel.send(`The requested tournament has been removed from my memory (${args[1].toUpperCase()})`);
 				return;
-			case "find":
-			case "search":
-				return;
 		}
 	}
 }
