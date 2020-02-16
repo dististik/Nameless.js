@@ -33,7 +33,7 @@ let quitP1 = ['z','v','3','r','1','$'];
 let quitP2 = ['y','z','+','7','n','i'];
 
 client.on('ready', () => {
-  console.log('Nameless.js build 12 ready!');
+  console.log('Nameless.js build 13 ready!');
 });
 
 //reusable functions
