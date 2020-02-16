@@ -172,6 +172,8 @@
 	"Zapdos":{"uber":false,"exiled":false,"roulette":true,"number":"145"},
 	"Moltres":{"uber":false,"exiled":false,"roulette":true,"number":"146"},
 	"Golbat":{"uber":false,"exiled":false,"roulette":true,"number":"042"},
+	"Dratini":{"uber":false,"exiled":false,"roulette":false,"number":"147"},
+	"Dragonair":{"uber":false,"exiled":false,"roulette":false,"number":"148"},
 	"Dragonite":{"uber":false,"exiled":false,"roulette":true,"number":"149"},
 	"Mewtwo":{"uber":true,"exiled":false,"roulette":true,"number":"150"},
 	"Mew":{"uber":false,"exiled":false,"roulette":true,"number":"151"},
