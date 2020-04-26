@@ -17,7 +17,7 @@ for(const file of commandFiles){
 // common event handling
 // code to execute when the client is successfully connected to discord
 client.on('ready', () => {
-	console.log('Nameless rewrite build 3 is ready!');
+	console.log('Nameless rewrite build 4 is ready!');
 });
 
 // code to execute when a message is recieved

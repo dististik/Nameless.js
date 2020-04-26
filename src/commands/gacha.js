@@ -1,6 +1,6 @@
 const DiscordIDs = require('../json/discord_ids.json');
 const Pokedex = require('../json/pokedex.json');
-const Gacha = require('scripts/roulette.js');
+const Gacha = require('./scripts/roulette.js');
 // Declare array of possible rolls
 let randpoke = [];
 // Create array of Pokedex keys (Pokemon names)

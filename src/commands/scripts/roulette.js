@@ -1,4 +1,4 @@
-const $p = require('./randpoke.json');
+const $p = require('../../json/randpoke.json');
 
 exports.randpoke = function(format,number){
 	let $format = format;
