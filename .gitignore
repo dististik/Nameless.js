@@ -2,5 +2,7 @@ src/config.json
 src/*.bat
 src/attatchments
 src/node_modules
+src/node_modules_2
+src/node_modules_old
 src/tournaments
 *.zip
