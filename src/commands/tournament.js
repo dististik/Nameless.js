@@ -55,7 +55,7 @@ function getRoster(obj,message,send){
 	// Fetch the tournament message and it's reactions
 	message.channel.fetchMessage(obj.message_id)
 		.then($message => {
-			let reactions = $message.reactions.get(obj.emoji_id);
+			let reactions = $message.reactions.cache.get(obj.emoji_id);
 			// Process the reactions and place them in the tournament object's roster array
 			reactions.fetchUsers(100).then($map => {
 				// Assign values to an array and initialise a string mirror of tour object roster array
@@ -73,8 +73,8 @@ function getRoster(obj,message,send){
 				fs.writeFile(`attatchments/text/roster.txt`,userString,(err) => {
 					if (err) throw err;
 					// Send text file to private server and grab it
-					let attFile = message.client.guilds.get(DiscordIDs.guilds.emoji)
-						.channels.get(DiscordIDs.channels['attachments']);
+					let attFile = message.client.guilds.cache.get(DiscordIDs.guilds.emoji)
+						.channels.cache.get(DiscordIDs.channels['attachments']);
 					attFile.send(new Discord.Attachment('attatchments/text/roster.txt')).then($txt => {
 						// Grab .txt file attachment ID from message attachment keys
 						let textID = $txt.attachments.keys().next().value;
