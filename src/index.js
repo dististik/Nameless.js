@@ -300,13 +300,17 @@ client.on('message', message => {
 	//ARGUMENTS REQUIRED
 	if(message.content.startsWith('!rule')){ //Reminds rules and allows moderators to warn others of the rules
 		if (!message.guild) return;
+		var rule = "";
 		function checkRole(id){
 			return message.member.roles.has(id);
 		}
+		if(message.content.startsWith('!rules')) rule = message.toString().substr(7);
+		else rule = message.toString().substr(6);
+
+		console.log(message.content);
 
 		var embed = new RichEmbed().setColor(0xEE7F34);
 		var $user = message.mentions.members.first();
-		var rule = message.toString().substr(6);
 		var $channel = message.channel;
 		var desc;
 		if($user && (checkRole('207394386412175361') || checkRole('207393223813890048') || checkRole('207392952777965568'))){ warn = true; }
