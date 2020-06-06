@@ -14,18 +14,24 @@ Currently, Nameless is in the process of rewriting her extremely messy code into
 While it is likely currently out of date, see the [contributing markdown](https://github.com/dististik/Nameless.js/blob/master/CONTRIBUTING.md) for this project.
 
 ## Installing
-Nameless runs on [Node.js](https://nodejs.org/en/) using the Discord API library, [Discord.js](https://github.com/discordjs/discord.js). As such a local install of Node, version 6.0.0 or higher, is required to run her on any machine she's installed on. Instead of clogging up the repo with them, all of her current dependencies are only included in her [release files](https://github.com/dististik/Nameless.js/releases) which are kept in for ease of launch using the included batch file. 
+Nameless currently runs in a very specific environment due to being fine tuned for the Nisemon League Discord server. Before recreating her run environment, you'll need the following:
++ [Node.js](https://nodejs.org/) version 12.0.0 or higher
++ A Discord application via the [developer portal](https://discord.com/developers) with a bot account attached
 
-Notably, a `config.json` is not included in any of Nameless' releases. In order for her to run, you will either need a config file provided to you in the event that you're trusted to run a backup of her, or need to create your own using the token of your own Discord bot application. For the rewrite build of Nameless, her config file should currently look like this:
+After cloning her repository, run `npm install` in her source directory to download all of her node dependencies. Before you can run Nameless, you will need to add your bot (created above) to a test server of your own and give her a `config.json`. Currently, Nameless' config file looks like the following:
 
 ```json
 {
-	"token" : "DISCORD BOT TOKEN",
-	"prefix" : "COMMAND PREFIX"
+	"token": "BOT TOKEN HERE",
+	"prefix" : "COMMAND PREFIX HERE"
 }
 ```
 
-Once you have both Node, version 6.0.0 or higher, and a config file in the same directory as the `index.json` file, launching the provided batch file or running `node index.js` in the same directory as the `index.json` file should bring her online.
+`token` should be set to your own bot's token from your application's bot tab and `prefix` should be set to whichever character(s) you would like to precede all of your commands -- for example `!hello`'s prefix is `"!"`.
+
+As of now you should be able to run most of Nameless' basic commands, however to fully replicate her run environment (and by extension use her more involved commands) you will need to provide alternatives to all of the IDs in `json/discord_ids.json`. These IDs are obtained by turning on Discord's developer mode under "Appearance" in your settings and right click the roles, channels, server(s)/guild(s), and users you're using as replacements in your own server.
+
+Now by running `node index.js` in her source directory you should have full access to a copy of Nameless. If this is for development purposes, a batch file ending with a `pause` command is recommended in Windows environments as not all of Nameless' errors are handled yet.
 
 ## Notable dependencies
 + [discordjs/discord.js](https://github.com/discordjs/discord.js)
