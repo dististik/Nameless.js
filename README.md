@@ -29,7 +29,7 @@ After cloning her repository, run `npm install` in her source directory to downl
 
 `token` should be set to your own bot's token from your application's bot tab and `prefix` should be set to whichever character(s) you would like to precede all of your commands -- for example `!hello`'s prefix is `"!"`.
 
-As of now you should be able to run most of Nameless' basic commands, however to fully replicate her run environment (and by extension use her more involved commands) you will need to provide alternatives to all of the IDs in `json/discord_ids.json`. These IDs are obtained by turning on Discord's developer mode under "Appearance" in your settings and right click the roles, channels, server(s)/guild(s), and users you're using as replacements in your own server.
+As of now you should be able to run most of Nameless' basic commands, however to fully replicate her run environment (and by extension use her more involved commands) you will need to provide alternatives to all of the IDs in `templates/discord_ids.json` and place your version of the file in the `src/json` subdirectory. These IDs are obtained by turning on Discord's developer mode under "Appearance" in your settings and right click the roles, channels, server(s)/guild(s), and users you're using as replacements in your own server.
 
 Now by running `node index.js` in her source directory you should have full access to a copy of Nameless. If this is for development purposes, a batch file ending with a `pause` command is recommended in Windows environments as not all of Nameless' errors are handled yet.
 
