@@ -5,4 +5,5 @@ src/node_modules
 src/node_modules_11
 src/node_modules_12
 src/tournaments
+src/json/discord_ids.json
 *.zip
