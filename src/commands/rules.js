@@ -18,7 +18,7 @@ module.exports = {
 		// If a mention exists in the command message, assign it to memory
 		let mention = message.mentions.members.first();
 		// Create the embed object for sending the rule by fetching rule info from rules.json
-		let embed = new Discord.RichEmbed()
+		let embed = new Discord.MessageEmbed()
 			.setColor(0xEE7F34)
 			.setTitle(Rules[args[0]].title)
 			.setDescription(Rules[args[0]].text);

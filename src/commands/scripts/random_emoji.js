@@ -6,7 +6,7 @@ function randomProperty(obj){
 	// Create array of emoji keys
 	let keys = Array.from(obj.keys());
 	// Pick a random key to access the cache of guild emoji
-	return obj.cache.get(keys[Math.floor(Math.random() * keys.length)])
+	return obj.get(keys[Math.floor(Math.random() * keys.length)])
 };
 // Get a random emoji from Nameless' designated emoji guild
 exports.randomEmoji = function(client){
@@ -14,5 +14,5 @@ exports.randomEmoji = function(client){
 	let emojiGuild = client.guilds.cache.get(DiscordIDs.guilds.emoji);
 	// If the emoji guild is online, return a random emoji from it
 	if(emojiGuild.available)
-		return randomProperty(emojiGuild.emojis);
+		return randomProperty(emojiGuild.emojis.cache);
 }

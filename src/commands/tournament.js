@@ -28,7 +28,7 @@ function tourEmbed(obj,type){
 			let tourStatus = "";
 			if(!obj.status) tourStatus = "Closed"; else tourStatus = "Open";
 			// Create and return embed
-			let embed = new Discord.RichEmbed()
+			let embed = new Discord.MessageEmbed()
 				.setColor(0xE57274)
 				.setTitle(`${obj.uid} - Tournament Roster`)
 				.setDescription(`**Players**: ${obj.roster.length}\n**Status**: ${tourStatus}\n[download](${obj.links[0]}) | [view](${obj.links[1]})`)
@@ -53,11 +53,14 @@ function getRoster(obj,message,send){
 	// Empty the existing roster in case any changes have happened to already existing registries
 	obj.roster = [].slice();
 	// Fetch the tournament message and it's reactions
-	message.channel.fetchMessage(obj.message_id)
+	console.log(obj);
+	console.log(obj.message_id);
+	message.channel.messages.fetch(obj.message_id)
 		.then($message => {
+			console.log($message);
 			let reactions = $message.reactions.cache.get(obj.emoji_id);
 			// Process the reactions and place them in the tournament object's roster array
-			reactions.fetchUsers(100).then($map => {
+			reactions.users.fetch({limit:100}).then($map => {
 				// Assign values to an array and initialise a string mirror of tour object roster array
 				let values = Array.from($map);
 				let userString = "";
@@ -75,7 +78,7 @@ function getRoster(obj,message,send){
 					// Send text file to private server and grab it
 					let attFile = message.client.guilds.cache.get(DiscordIDs.guilds.emoji)
 						.channels.cache.get(DiscordIDs.channels['attachments']);
-					attFile.send(new Discord.Attachment('attatchments/text/roster.txt')).then($txt => {
+					attFile.send(new Discord.MessageAttachment('attatchments/text/roster.txt')).then($txt => {
 						// Grab .txt file attachment ID from message attachment keys
 						let textID = $txt.attachments.keys().next().value;
 						// Set tournament link array to the appropriate links
@@ -114,7 +117,7 @@ module.exports = {
 		}
 		// Check if message author has the role required to start a tournament
 		for(i=0;i<Perms.length;i++){
-			if(message.member.roles.has(Perms[i])) break;
+			if(message.member.roles.cache.has(Perms[i])) break;
 			else if(i == Perms.length) { 
 				// Exit command if they don't have any of the requires roles
 				message.channel.send("You don't have permission to start tournaments");
@@ -136,9 +139,9 @@ module.exports = {
 				// Grab a random emoji from Nameless' list
 				let reactEmoji = RandomEmoji.randomEmoji(message.client);
 				// Get the tournament start message and react to it with the random emoji
-				message.channel.fetchMessage(args[1]).then($message => {$message.react(reactEmoji)});
+				message.channel.messages.fetch(args[1]).then($message => {$message.react(reactEmoji)});
 				// Create a new open tournament object and json stringify it
-				let newTournament = new Tournament(true,args[1],`${reactEmoji.name}:${reactEmoji.id}`,["69420"],tourID);
+				let newTournament = new Tournament(true,args[1],reactEmoji.id,["69420"],tourID);
 				let newTourString = JSON.stringify(newTournament);
 				// Create the new tournament file
 				fs.writeFile(`tournaments/${tourID}.json`,newTourString,(err) => {
@@ -186,7 +189,7 @@ module.exports = {
 			case "kill":
 			case "delete":
 				// Check if the user is a coordinator
-				if(!message.member.roles.has(DiscordIDs.roles.coordinator)) { 
+				if(!message.member.roles.cache.has(DiscordIDs.roles.coordinator)) { 
 					message.channel.send("Only a coordinator can delete tournament files."); 
 					return; 
 				}
